@@ -1,5 +1,6 @@
 import pandas
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -20,31 +21,37 @@ for i in range(len(arr)):
 			if(arr[i][j]<maxi):
 				maxi=arr[i][j]
 print(maxi)
+
 for i in range(len(arr)):
 	for j in range(len(arr[0])):
-		if(arr[i][j]!=out):
-			sum1+=arr[i][j]
-
+		if(arr[i][j]==out):
+			arr[i][j]=np.nan
+'''
 for i in range(len(arr)):
 	for j in range(len(arr[0])):
 		if(arr[i][j]!=out):
 			arr[i][j]=(arr[i][j]/sum1)*255
 		else:
 			arr[i][j]=((out-1)/sum1)*0
+'''
 X=range(len(arr))
 Y=range(len(arr[0]))
-arr = np.ma.array(arr)
-threshold = out
-arr_masked = np.ma.masked_where(arr < threshold, arr)
-print(arr_masked)
+arr_masked = np.ma.array(arr,mask=np.isnan(arr))
+#arr_masked = np.transpose(arr_masked)
+cmap = matplotlib.cm.jet
+cmap.set_under('white',1.)
+#threshold = out
+#arr_masked = np.ma.masked_where(arr < threshold, arr)
+#print(arr_masked)
 #arr = np.ma.masked_greater(arr, maxi)
-print(arr[0][:10])
+#print(arr[0][:10])
 
 #arr=np.transpose(arr)
 #plt.cm(arr,cmap="rainbow")
-plt.pcolor(Y, X, arr_masked, cmap=plt.cm.get_cmap('rainbow'),vmin=maxi, vmax=outlier)
-plt.colorbar()
-#plt.imshow(arr,cmap="rainbow")
+#plt.pcolor(Y, X, arr_masked, cmap=plt.cm.get_cmap('rainbow'),vmin=maxi, vmax=outlier)
+#plt.colorbar()
+f = plt.figure()
+plt.imshow(arr_masked,cmap=cmap)
+f.canvas.draw()
 plt.show()
-
 
